@@ -45,6 +45,11 @@
 //#define IS_IN_RANGE(%0,%1,%2) (((%0) - ((%1) + cellmin)) < (((%2) + 1) - ((%1) + cellmin)))
 #define IS_IN_RANGE(%0,%1,%2) ((%0) >= (%1) && (%0) <= (%2))
 
+// useful states for vehicle windows
+#define VEHICLE_WINDOW_CLOSED 1
+#define VEHICLE_WINDOW_OPENED 0
+#define VEHICLE_WINDOW_UNSET  -1
+
 /*
 
 	Deprecated stuff
