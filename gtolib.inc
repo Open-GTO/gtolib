@@ -80,7 +80,7 @@
 
 */
 
-#if defined _gmtime_included
+#if defined _time_t_included
 
 stock timestamp_to_format_date(unix_timestamp)
 {
