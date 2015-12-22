@@ -80,12 +80,12 @@
 
 */
 
-#if defined timestamp_to_date
+#if defined _gmtime_included
 
 stock timestamp_to_format_date(unix_timestamp)
 {
 	new year, month, day, hour, minute, second;
-	timestamp_to_date(unix_timestamp, year, month, day, hour, minute, second);
+	gmtime(unix_timestamp, year, month, day, hour, minute, second);
 
 	new string[20];
 	format(string, sizeof(string), "%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
