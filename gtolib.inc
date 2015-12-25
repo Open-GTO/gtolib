@@ -250,7 +250,7 @@ stock InsertSpacesInString(string[], const size = sizeof(string), const between_
 	}
 }
 
-stock InsertSpacesInInt(value, result[], const size = sizeof(string), const between_pos = 3)
+stock InsertSpacesInInt(value, result[], const size = sizeof(result), const between_pos = 3)
 {
 	valstr(result, value);
 	InsertSpacesInString(result, size, between_pos);
