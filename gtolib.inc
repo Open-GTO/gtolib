@@ -94,6 +94,15 @@ stock timestamp_to_format_date(unix_timestamp)
 
 #endif
 
+stock IsDateExpired(timestamp)
+{
+	if (getdate() > timestamp) {
+		return 1;
+	}
+	
+	return 0;
+}
+
 /*
 
 	Player functions
