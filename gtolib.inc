@@ -137,8 +137,24 @@ stock SetPlayerPosEx(playerid, Float:x, Float:y, Float:z, Float:angle, interior,
 	SetCameraBehindPlayer(playerid);
 }
 
-stock SendMessageToBesidePlayers(message[], Float:range, Float:x, Float:y, Float:z)
+stock SendMessageToNearPlayers(message[], Float:range, Float:x, Float:y, Float:z)
 {
+	foreach (new playerid : Player) {
+		if (IsPlayerInRangeOfPoint(playerid, range, x, y, z)) {
+			SendClientMessage(playerid, -1, message);
+		}
+	}
+}
+
+stock SendMessageToNearVehiclePlayers(message[], Float:range, vehicleid)
+{
+	new
+		Float:x,
+		Float:y,
+		Float:z;
+
+	GetVehiclePos(vehicleid, x, y, z);
+
 	foreach (new playerid : Player) {
 		if (IsPlayerInRangeOfPoint(playerid, range, x, y, z)) {
 			SendClientMessage(playerid, -1, message);
