@@ -162,6 +162,22 @@ stock SendMessageToNearVehiclePlayers(message[], Float:range, vehicleid)
 	}
 }
 
+stock SendMessageToNearPlayerPlayers(message[], Float:range, targetid)
+{
+	new
+		Float:x,
+		Float:y,
+		Float:z;
+
+	GetPlayerPos(targetid, x, y, z);
+
+	foreach (new playerid : Player) {
+		if (IsPlayerInRangeOfPoint(playerid, range, x, y, z)) {
+			SendClientMessage(playerid, -1, message);
+		}
+	}
+}
+
 /*
 
 	Chat functions
