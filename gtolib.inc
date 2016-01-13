@@ -327,43 +327,6 @@ stock GenerateRandomString(result_str[], length, size = sizeof(result_str), alph
 	return 1;
 }
 
-/*
-	
-	About: strcmp empty string fix
-	Author: Y_Less
-
-*/
-
-stock strcmpEx(const string1[], const string2[], bool:ignorecase=false, length=cellmax)
-{
-	if (string1[0])
-	{
-		if (string2[0])
-		{
-			return strcmp(string1, string2, ignorecase, length);
-		}
-		else
-		{
-			// Positive as st1 is greater (strcmp spec).
-			return 1;
-		}
-	}
-	else
-	{
-		if (string2[0])
-		{
-			// Negative as str2 is greater.
-			return -1;
-		}
-		else
-		{
-			// The strings are the same (empty).
-			return 0;
-		}
-	}
-}
-#define strcmp strcmpEx
-
 stock FormatPosition(position)
 {
 	static pos_string[] = {"st!", "nd!", "rd!", "th"};
