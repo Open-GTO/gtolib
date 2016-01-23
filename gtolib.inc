@@ -167,7 +167,6 @@ stock TeleportPlayerToPos(playerid, Float:x, Float:y, Float:z, Float:angle, inte
 stock TeleportPlayerToPlayer(playerid, to_playerid, bool:with_vehicle = true)
 {
 	new
-		vehicleid,
 		Float:x,
 		Float:y,
 		Float:z,
