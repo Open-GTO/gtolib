@@ -145,12 +145,27 @@ stock GetPlayerPosEx(playerid, &Float:x, &Float:y, &Float:z, &Float:angle, &inte
 	world = GetPlayerVirtualWorld(playerid);
 }
 
-stock TeleportPlayerToPlayer(playerid, to_playerid, bool:with_vehicle = true)
+stock TeleportPlayerToPos(playerid, Float:x, Float:y, Float:z, Float:angle, interior = 0, world = 0, bool:with_vehicle = true)
 {
-	if (!IsPlayerConnected(to_playerid)) {
-		return 0;
+	new vehicleid = GetPlayerVehicleID(playerid);
+
+	if (vehicleid != 0 && with_vehicle) {
+		SetVehiclePos(vehicleid, x, y, z);
+		SetVehicleZAngle(vehicleid, angle);
+
+		LinkVehicleToInterior(vehicleid, interior);
+		SetVehicleVirtualWorld(vehicleid, world);
+	} else {
+		SetPlayerPos(playerid, x, y, z);
+		SetPlayerFacingAngle(playerid, angle);
 	}
 
+	SetPlayerInterior(playerid, interior);
+	SetPlayerVirtualWorld(playerid, world);
+}
+
+stock TeleportPlayerToPlayer(playerid, to_playerid, bool:with_vehicle = true)
+{
 	new
 		vehicleid,
 		Float:x,
@@ -167,23 +182,7 @@ stock TeleportPlayerToPlayer(playerid, to_playerid, bool:with_vehicle = true)
 	y = y + random(2) - random(4);
 
 	// teleport
-	vehicleid = GetPlayerVehicleID(playerid);
-
-	if (vehicleid != 0 && with_vehicle) {
-		SetVehiclePos(vehicleid, x, y, z);
-		SetVehicleZAngle(vehicleid, angle);
-
-		LinkVehicleToInterior(vehicleid, interior);
-		SetVehicleVirtualWorld(vehicleid, world);
-	} else {
-		SetPlayerPos(playerid, x, y, z);
-		SetPlayerFacingAngle(playerid, angle);
-	}
-
-	SetPlayerInterior(playerid, interior);
-	SetPlayerVirtualWorld(playerid, world);
-
-	return 1;
+	TeleportPlayerToPos(playerid, x, y, z, angle, interior, world, with_vehicle);
 }
 
 stock SendMessageToNearPlayers(message[], Float:range, Float:x, Float:y, Float:z)
