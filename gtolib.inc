@@ -128,13 +128,47 @@ stock GetPlayersCount()
 	return Iter_Count(Player);
 }
 
-stock SetPlayerPosEx(playerid, Float:x, Float:y, Float:z, Float:angle, interior, world = 0)
+stock SetPlayerPosEx(playerid, Float:x, Float:y, Float:z, Float:angle, interior = 0, world = 0)
 {
 	SetPlayerInterior(playerid, interior);
 	SetPlayerFacingAngle(playerid, angle);
 	SetPlayerVirtualWorld(playerid, world);
 	SetPlayerPos(playerid, x, y, z);
 	SetCameraBehindPlayer(playerid);
+}
+
+stock GetPlayerPosEx(playerid, &Float:x, &Float:y, &Float:z, &Float:angle, &interior = 0, &world = 0)
+{
+	GetPlayerPos(playerid, x, y, z);
+	GetPlayerFacingAngle(playerid, angle);
+	interior = GetPlayerInterior(playerid);
+	world = GetPlayerVirtualWorld(playerid);
+}
+
+stock TeleportPlayerToPlayer(playerid, to_playerid)
+{
+	if (!IsPlayerConnected(to_playerid)) {
+		return 0;
+	}
+
+	new
+		Float:x,
+		Float:y,
+		Float:z,
+		Float:angle,
+		interior,
+		world;
+
+	// get info
+	GetPlayerPosEx(to_playerid, x, y, z, angle, interior, world);
+
+	x = x + random(2) - random(4);
+	y = y + random(2) - random(4);
+
+	// teleport
+	SetPlayerPosEx(playerid, x, y, z, angle, interior, world);
+
+	return 1;
 }
 
 stock SendMessageToNearPlayers(message[], Float:range, Float:x, Float:y, Float:z)
