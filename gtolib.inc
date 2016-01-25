@@ -509,7 +509,7 @@ stock pow(value, degree)
 	return result;
 }
 
-stock GetVehicleSpeed(vehicleid)
+stock Float:GetVehicleSpeed(vehicleid)
 {
 	new
 		Float:x,
@@ -518,7 +518,7 @@ stock GetVehicleSpeed(vehicleid)
 
 	GetVehicleVelocity(vehicleid, x, y, z);
 
-	return floatround( floatsqroot(x*x + y*y + z*z) * 100 );
+	return VectorSize(x, y, z) * 180.0;
 }
 
 
