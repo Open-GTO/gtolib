@@ -458,7 +458,7 @@ stock IsValidChars(string[])
 stock IsNumeric(const string[])
 {
 	for (new i = 0; string[i] != '\0'; i++) {
-		if (!IS_IN_RANGE(string[i], '0', '9')) {
+		if (!isdigit(string[i])) {
 			return 0;
 		}
 	}
@@ -472,7 +472,7 @@ stock IsIpAddress(string[])
 		j = 100;
 
 	for (new i = 0; string[i] != '\0'; i++) {
-		if (j != 0 && IS_IN_RANGE(string[i], '0', '9')) {
+		if (j != 0 && isdigit(string[i])) {
 			octet += (string[i] - '0') * j;
 			j /= 10;
 		} else if (string[i] == '.') {
@@ -539,33 +539,45 @@ SSCANF:ftime(string[])
 		return -1;
 	}
 
-	time_type = string[length - 1];
+	if (!isdigit(string[length - 1])) {
+		time_type = string[length - 1];
 
-	strdel(string, length - 1, length);
+		strdel(string, length - 1, length);
+	}
+
 	time_second = strval(string);
 
 	switch (time_type) {
-		case 's', '—Å': {
+		case 's', 'Ò': {
 
 		}
-		case 'm', '–º': {
+		case 'm', 'Ï': {
 			time_second *= 60;
 		}
-		case 'h', '—á': {
+		case 'h', '˜': {
 			time_second *= 60 * 60;
 		}
-		case 'd', '–¥': {
+		case 'd', '‰': {
 			time_second *= 60 * 60 * 24;
 		}
-		case 'w', '–Ω': {
+		case 'w', 'Ì': {
 			time_second *= 60 * 60 * 24 * 7;
 		}
-		case 'y', '–≥': {
+		case 'y', '„': {
 			time_second *= 60 * 60 * 24 * 365;
 		}
 	}
 
 	return time_second;
+}
+
+stock isdigit(symbol)
+{
+	if ('0' <= symbol <= '9') {
+		return 1;
+	}
+
+	return 0;
 }
 
 /*
