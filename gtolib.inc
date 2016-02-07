@@ -94,6 +94,40 @@ stock timestamp_to_format_date(unix_timestamp)
 
 #endif
 
+#if defined OPEN_GTO
+
+stock GetTimeStringFromSeconds(input_seconds, string[], const size = sizeof(string))
+{
+	new
+		str_days[MAX_LANG_VALUE_STRING],
+		str_hours[MAX_LANG_VALUE_STRING],
+		str_minutes[MAX_LANG_VALUE_STRING],
+		str_seconds[MAX_LANG_VALUE_STRING],
+
+		days = input_seconds / 60 / 60 / 24,
+		hours = (input_seconds / 60 / 60) % 24,
+		minutes = (input_seconds / 60) % 60,
+		seconds = input_seconds % 60;
+
+	if (days != 0) {
+		Declension_GetDays(days, str_days);
+		Declension_GetHours(hours, str_hours);
+
+		format(string, size, _(TIME_DAY), days, str_days, hours, str_hours);
+	} else if (hours != 0) {
+		Declension_GetHours(hours, str_hours);
+
+		format(string, size, _(TIME_HOUR), hours, str_hours);
+	}
+	
+	Declension_GetDays(minutes, str_minutes);
+	Declension_GetHours(seconds, str_seconds);
+
+	format(string, size, _(TIME_MINUTES), string, minutes, str_minutes, seconds, str_seconds);
+}
+
+#endif
+
 stock IsDateExpired(timestamp)
 {
 	if (getdate() > timestamp) {
