@@ -189,6 +189,17 @@ stock TeleportPlayerToPos(playerid, Float:x, Float:y, Float:z, Float:angle, inte
 
 		LinkVehicleToInterior(vehicleid, interior);
 		SetVehicleVirtualWorld(vehicleid, world);
+
+		new trailerid = GetVehicleTrailer(vehicleid);
+		if (trailerid != 0) {
+			SetVehiclePos(trailerid, x, y, z);
+			SetVehicleZAngle(trailerid, angle);
+
+			LinkVehicleToInterior(trailerid, interior);
+			SetVehicleVirtualWorld(trailerid, world);
+
+			AttachTrailerToVehicle(trailerid, vehicleid);
+		}
 	} else {
 		SetPlayerPos(playerid, x, y, z);
 		SetPlayerFacingAngle(playerid, angle);
