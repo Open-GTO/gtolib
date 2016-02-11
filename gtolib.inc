@@ -120,8 +120,8 @@ stock GetTimeStringFromSeconds(input_seconds, string[], const size = sizeof(stri
 		format(string, size, _(TIME_HOUR), hours, str_hours);
 	}
 	
-	Declension_GetDays(minutes, str_minutes);
-	Declension_GetHours(seconds, str_seconds);
+	Declension_GetMinutes(minutes, str_minutes);
+	Declension_GetSeconds(seconds, str_seconds);
 
 	format(string, size, _(TIME_MINUTES), string, minutes, str_minutes, seconds, str_seconds);
 }
