@@ -119,7 +119,7 @@ stock GetTimeStringFromSeconds(input_seconds, string[], const size = sizeof(stri
 
 		format(string, size, _(TIME_HOUR), hours, str_hours);
 	}
-	
+
 	Declension_GetMinutes(minutes, str_minutes);
 	Declension_GetSeconds(seconds, str_seconds);
 
@@ -133,7 +133,7 @@ stock IsDateExpired(timestamp)
 	if (getdate() > timestamp) {
 		return 1;
 	}
-	
+
 	return 0;
 }
 
@@ -389,9 +389,14 @@ stock InsertSpacesInInt(value, result[], const size = sizeof(result), const betw
 	InsertSpacesInString(result, size, between_pos);
 }
 
+stock strcpy(result[], source[], const size = sizeof(result))
+{
+	result[0] = 0;
+	return strcat(result, source, size);
+}
 
 /*
-	
+
 	GenerateRandomString(result_str[], length, size = sizeof(result_str), alphabet[] = DEFAULT_ALPHABET, alphabet_size = sizeof(alphabet))
 
 */
@@ -407,7 +412,7 @@ stock GenerateRandomString(result_str[], length, size = sizeof(result_str), alph
 	if (length > size) {
 		length = size - 1;
 	}
-	
+
 	if (length < 1) {
 		return 0;
 	}
@@ -579,7 +584,7 @@ SSCANF:ftime(string[])
 		time_type;
 
 	length = strlen(string);
-	
+
 	if (length < 1) {
 		return -1;
 	}
@@ -639,7 +644,7 @@ stock insertSort(array[], const size = sizeof(array))
 
 	for (i = 1; i < size; i++) {
 		key = array[i];
-		
+
 		for (j = i - 1; j >= 0 && array[j] > key; j--) {
 			array[j + 1] = array[j];
 		}
