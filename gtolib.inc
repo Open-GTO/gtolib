@@ -19,7 +19,6 @@
 #endif
 
 #define _gtolib_included
-#pragma library gtolib
 
 /*
 
