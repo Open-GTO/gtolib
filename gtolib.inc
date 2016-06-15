@@ -34,6 +34,10 @@
 	#define MAX_NAME 40
 #endif
 
+#if !defined MAX_LANG_VALUE_STRING
+	#define MAX_LANG_VALUE_STRING 144
+#endif
+
 #define MODE_INFO_VERSION 1
 #define MODE_INFO_NAME    2
 
@@ -93,8 +97,6 @@ stock timestamp_to_format_date(unix_timestamp)
 
 #endif
 
-#if defined OPEN_GTO
-
 stock GetTimeStringFromSeconds(input_seconds, string[], const size = sizeof(string))
 {
 	new
@@ -112,20 +114,20 @@ stock GetTimeStringFromSeconds(input_seconds, string[], const size = sizeof(stri
 		Declension_GetDays(days, str_days);
 		Declension_GetHours(hours, str_hours);
 
-		format(string, size, _(TIME_DAY), days, str_days, hours, str_hours);
+		format(string, size, "%d %s, %d %s, ", days, str_days, hours, str_hours);
 	} else if (hours != 0) {
 		Declension_GetHours(hours, str_hours);
 
-		format(string, size, _(TIME_HOUR), hours, str_hours);
+		format(string, size, "%d %s, ", hours, str_hours);
+	} else {
+		string[0] = '\0';
 	}
 
 	Declension_GetMinutes(minutes, str_minutes);
 	Declension_GetSeconds(seconds, str_seconds);
 
-	format(string, size, _(TIME_MINUTES), "", minutes, str_minutes, seconds, str_seconds);
+	format(string, size, "%s%d %s, %d %s", string, minutes, str_minutes, seconds, str_seconds);
 }
-
-#endif
 
 stock IsDateExpired(timestamp)
 {
