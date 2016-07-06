@@ -55,15 +55,6 @@
 
 /*
 
-	Deprecated stuff
-
-*/
-
-#define GivePVarInt(%1,%2,%3) SetPVarInt(%1,%2, GetPVarInt(%1,%2)+(%3))
-#define set(%0,%1) strmid(%0,%1, 0, 160, MAX_STRING + 32)
-
-/*
-
 	Key functions
 
 */
