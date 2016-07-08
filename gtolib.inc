@@ -88,7 +88,7 @@ stock timestamp_to_format_date(unix_timestamp)
 
 #endif
 
-stock GetTimeStringFromSeconds(input_seconds, string[], const size = sizeof(string))
+stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = sizeof(string))
 {
 	new
 		str_days[MAX_LANG_VALUE_STRING],
@@ -102,20 +102,20 @@ stock GetTimeStringFromSeconds(input_seconds, string[], const size = sizeof(stri
 		seconds = input_seconds % 60;
 
 	if (days != 0) {
-		Declension_GetDays(days, str_days);
-		Declension_GetHours(hours, str_hours);
+		Declension_GetDays(playerid, days, str_days);
+		Declension_GetHours(playerid, hours, str_hours);
 
 		format(string, size, "%d %s, %d %s, ", days, str_days, hours, str_hours);
 	} else if (hours != 0) {
-		Declension_GetHours(hours, str_hours);
+		Declension_GetHours(playerid, hours, str_hours);
 
 		format(string, size, "%d %s, ", hours, str_hours);
 	} else {
 		string[0] = '\0';
 	}
 
-	Declension_GetMinutes(minutes, str_minutes);
-	Declension_GetSeconds(seconds, str_seconds);
+	Declension_GetMinutes(playerid, minutes, str_minutes);
+	Declension_GetSeconds(playerid, seconds, str_seconds);
 
 	format(string, size, "%s%d %s, %d %s", string, minutes, str_minutes, seconds, str_seconds);
 }
