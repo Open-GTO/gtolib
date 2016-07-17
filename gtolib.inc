@@ -282,8 +282,6 @@ stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const si
 stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof(players))
 {
 	new
-		id,
-		i,
 		Float:pos_x,
 		Float:pos_y,
 		Float:pos_z;
