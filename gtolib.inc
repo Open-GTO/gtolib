@@ -19,7 +19,6 @@
 #endif
 
 #define _gtolib_included
-#pragma library gtolib
 
 /*
 
@@ -33,6 +32,10 @@
 
 #if !defined MAX_NAME
 	#define MAX_NAME 40
+#endif
+
+#if !defined MAX_LANG_VALUE_STRING
+	#define MAX_LANG_VALUE_STRING 144
 #endif
 
 #define MODE_INFO_VERSION 1
@@ -49,15 +52,6 @@
 #define VEHICLE_WINDOW_CLOSED 1
 #define VEHICLE_WINDOW_OPENED 0
 #define VEHICLE_WINDOW_UNSET  -1
-
-/*
-
-	Deprecated stuff
-
-*/
-
-#define GivePVarInt(%1,%2,%3) SetPVarInt(%1,%2, GetPVarInt(%1,%2)+(%3))
-#define set(%0,%1) strmid(%0,%1, 0, 160, MAX_STRING + 32)
 
 /*
 
@@ -94,9 +88,7 @@ stock timestamp_to_format_date(unix_timestamp)
 
 #endif
 
-#if defined OPEN_GTO
-
-stock GetTimeStringFromSeconds(input_seconds, string[], const size = sizeof(string))
+stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = sizeof(string))
 {
 	new
 		str_days[MAX_LANG_VALUE_STRING],
@@ -110,30 +102,30 @@ stock GetTimeStringFromSeconds(input_seconds, string[], const size = sizeof(stri
 		seconds = input_seconds % 60;
 
 	if (days != 0) {
-		Declension_GetDays(days, str_days);
-		Declension_GetHours(hours, str_hours);
+		Declension_GetDays(playerid, days, str_days);
+		Declension_GetHours(playerid, hours, str_hours);
 
-		format(string, size, _(TIME_DAY), days, str_days, hours, str_hours);
+		format(string, size, "%d %s, %d %s, ", days, str_days, hours, str_hours);
 	} else if (hours != 0) {
-		Declension_GetHours(hours, str_hours);
+		Declension_GetHours(playerid, hours, str_hours);
 
-		format(string, size, _(TIME_HOUR), hours, str_hours);
+		format(string, size, "%d %s, ", hours, str_hours);
+	} else {
+		string[0] = '\0';
 	}
-	
-	Declension_GetMinutes(minutes, str_minutes);
-	Declension_GetSeconds(seconds, str_seconds);
 
-	format(string, size, _(TIME_MINUTES), string, minutes, str_minutes, seconds, str_seconds);
+	Declension_GetMinutes(playerid, minutes, str_minutes);
+	Declension_GetSeconds(playerid, seconds, str_seconds);
+
+	format(string, size, "%s%d %s, %d %s", string, minutes, str_minutes, seconds, str_seconds);
 }
-
-#endif
 
 stock IsDateExpired(timestamp)
 {
 	if (getdate() > timestamp) {
 		return 1;
 	}
-	
+
 	return 0;
 }
 
@@ -270,6 +262,37 @@ stock SendMessageToNearPlayerPlayers(message[], Float:range, targetid)
 	}
 }
 
+stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const size = sizeof(players))
+{
+	new
+		id,
+		i;
+
+	foreach (id : Player) {
+		if (i < size - 1 && IsPlayerInRangeOfPoint(id, range, x, y, z)) {
+			players[i] = id;
+			i++;
+		}
+	}
+
+	players[i - 1] = INVALID_PLAYER_ID;
+	return 0;
+}
+
+stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof(players))
+{
+	new
+		id,
+		i,
+		Float:pos_x,
+		Float:pos_y,
+		Float:pos_z;
+
+	GetPlayerPos(playerid, pos_x, pos_y, pos_z);
+	GetNearPlayers(pos_x, pos_y, pos_z, range, players, size);
+	return 0;
+}
+
 /*
 
 	Chat functions
@@ -389,9 +412,14 @@ stock InsertSpacesInInt(value, result[], const size = sizeof(result), const betw
 	InsertSpacesInString(result, size, between_pos);
 }
 
+stock strcpy(result[], source[], const size = sizeof(result))
+{
+	result[0] = 0;
+	return strcat(result, source, size);
+}
 
 /*
-	
+
 	GenerateRandomString(result_str[], length, size = sizeof(result_str), alphabet[] = DEFAULT_ALPHABET, alphabet_size = sizeof(alphabet))
 
 */
@@ -407,7 +435,7 @@ stock GenerateRandomString(result_str[], length, size = sizeof(result_str), alph
 	if (length > size) {
 		length = size - 1;
 	}
-	
+
 	if (length < 1) {
 		return 0;
 	}
@@ -579,7 +607,7 @@ SSCANF:ftime(string[])
 		time_type;
 
 	length = strlen(string);
-	
+
 	if (length < 1) {
 		return -1;
 	}
@@ -639,7 +667,7 @@ stock insertSort(array[], const size = sizeof(array))
 
 	for (i = 1; i < size; i++) {
 		key = array[i];
-		
+
 		for (j = i - 1; j >= 0 && array[j] > key; j--) {
 			array[j + 1] = array[j];
 		}
