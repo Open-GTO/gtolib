@@ -291,6 +291,18 @@ stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof
 	return 0;
 }
 
+stock GetVehicleNearPlayers(vehicleid, Float:range, players[], const size = sizeof(players))
+{
+	new
+		Float:pos_x,
+		Float:pos_y,
+		Float:pos_z;
+
+	GetVehiclePos(vehicleid, pos_x, pos_y, pos_z);
+	GetNearPlayers(pos_x, pos_y, pos_z, range, players, size);
+	return 0;
+}
+
 /*
 
 	Chat functions
@@ -592,6 +604,27 @@ stock Float:GetVehicleSpeed(vehicleid)
 	return VectorSize(x, y, z) * 180.0;
 }
 
+/*
+	SSCANF:weather
+*/
+
+SSCANF:weather(string[])
+{
+	if (!IsNumeric(string)) {
+		return -1;
+	}
+
+	new
+		weather;
+
+	weather = strval(string);
+
+	if (255 < weather < 0) {
+		return -1;
+	}
+
+	return weather;
+}
 
 /*
 	SSCANF:ftime
