@@ -451,7 +451,7 @@ stock GenerateRandomString(result_str[], length, size = sizeof(result_str), alph
 	}
 
 	for (new i = 0; i < length; i++) {
-		result_str[i] = alphabet[ random(alphabet_size) ];
+		result_str[i] = alphabet[ random(alphabet_size - 1) ];
 	}
 
 	return 1;
