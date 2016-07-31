@@ -38,6 +38,8 @@
 	#define MAX_LANG_VALUE_STRING 144
 #endif
 
+#define MAX_CELLVALUE_SIZE 10 // 2147483647
+
 #define MODE_INFO_VERSION 1
 #define MODE_INFO_NAME    2
 
