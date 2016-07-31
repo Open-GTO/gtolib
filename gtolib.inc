@@ -269,14 +269,20 @@ stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const si
 		i;
 
 	foreach (id : Player) {
-		if (i < size - 1 && IsPlayerInRangeOfPoint(id, range, x, y, z)) {
+		if (IsPlayerInRangeOfPoint(id, range, x, y, z)) {
 			players[i] = id;
 			i++;
+
+			if (i >= size) {
+				break;
+			}
 		}
 	}
 
-	players[i - 1] = INVALID_PLAYER_ID;
-	return 0;
+	if (i > 0) {
+		players[i - 1] = INVALID_PLAYER_ID;
+	}
+	return !!i;
 }
 
 stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof(players))
