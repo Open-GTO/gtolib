@@ -282,7 +282,7 @@ stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const si
 	}
 
 	if (i > 0) {
-		players[i - 1] = INVALID_PLAYER_ID;
+		players[i] = INVALID_PLAYER_ID;
 	}
 	return i;
 }
