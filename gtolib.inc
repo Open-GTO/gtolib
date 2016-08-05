@@ -92,8 +92,6 @@ stock timestamp_to_format_date(unix_timestamp)
 
 #endif
 
-#if defined _core_declension_included
-
 stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = sizeof(string))
 {
 	new
@@ -125,8 +123,6 @@ stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = s
 
 	format(string, size, "%s%d %s, %d %s", string, minutes, str_minutes, seconds, str_seconds);
 }
-
-#endif
 
 stock IsDateExpired(timestamp)
 {
