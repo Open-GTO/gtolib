@@ -10,10 +10,6 @@
 	#error "Please include a_samp or a_npc before gtolib"
 #endif
 
-#if !defined _FOREACH_LOCAL_VERSION
-	#error "Please include foreach before gtolib"
-#endif
-
 #if defined _gtolib_included
 	#endinput
 #endif
@@ -47,13 +43,19 @@
 #define ini_fileRemove	fremove
 #define ini_fileExist	fexist
 
-//#define IS_IN_RANGE(%0,%1,%2) (((%0) - ((%1) + cellmin)) < (((%2) + 1) - ((%1) + cellmin)))
-#define IS_IN_RANGE(%0,%1,%2) ((%0) >= (%1) && (%0) <= (%2))
-
 // useful states for vehicle windows
 #define VEHICLE_WINDOW_CLOSED 1
 #define VEHICLE_WINDOW_OPENED 0
-#define VEHICLE_WINDOW_UNSET  -1
+#define VEHICLE_WINDOW_UNSET -1
+
+// foreach check
+#if !defined foreach
+	#define foreach%0(new%1:%2) \
+		for (new%1 = GetPlayerPoolSize(); %1 != -1; %1--) \
+			if (!IsPlayerConnected(%1) || IsPlayerNPC(%1)) { \
+				continue; \
+			}
+#endif
 
 /*
 
@@ -90,6 +92,8 @@ stock timestamp_to_format_date(unix_timestamp)
 
 #endif
 
+#if defined _core_declension_included
+
 stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = sizeof(string))
 {
 	new
@@ -122,6 +126,8 @@ stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = s
 	format(string, size, "%s%d %s, %d %s", string, minutes, str_minutes, seconds, str_seconds);
 }
 
+#endif
+
 stock IsDateExpired(timestamp)
 {
 	if (getdate() > timestamp) {
@@ -129,6 +135,16 @@ stock IsDateExpired(timestamp)
 	}
 
 	return 0;
+}
+
+stock GetTickDiff(newtick, oldtick)
+{
+	if (oldtick < 0 && newtick >= 0) {
+		return newtick - oldtick;
+	} else if (oldtick >= 0 && newtick < 0 || oldtick > newtick) {
+		return (cellmax - oldtick + 1) - (cellmin - newtick);
+	}
+	return newtick - oldtick;
 }
 
 /*
@@ -273,17 +289,16 @@ stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const si
 	foreach (id : Player) {
 		if (IsPlayerInRangeOfPoint(id, range, x, y, z)) {
 			players[i] = id;
-			i++;
 
-			if (i >= size) {
+			if (i >= size - 1) {
 				break;
+			} else {
+				i++;
 			}
 		}
 	}
 
-	if (i > 0) {
-		players[i] = INVALID_PLAYER_ID;
-	}
+	players[i] = INVALID_PLAYER_ID;
 	return i;
 }
 
@@ -329,6 +344,49 @@ stock Chat_ClearAll()
 	for (new i = 0; i < 20; i++) {
 		SendClientMessageToAll(-1, "");
 	}
+}
+
+stock ProxDetector(playerid, Float:max_range, color, string[], Float:max_ratio = 1.6)
+{
+	new
+		Float:pos_x,
+		Float:pos_y,
+		Float:pos_z,
+		Float:range,
+		Float:range_ratio,
+		Float:range_with_ratio,
+		clr_r, clr_g, clr_b,
+		Float:color_r, Float:color_g, Float:color_b;
+
+	if (!GetPlayerPos(playerid, pos_x, pos_y, pos_z)) {
+		return 0;
+	}
+
+	color_r = float(color >> 24 & 0xFF);
+	color_g = float(color >> 16 & 0xFF);
+	color_b = float(color >> 8 & 0xFF);
+	range_with_ratio = max_range * max_ratio;
+
+	foreach (new i : Player) {
+		if (!IsPlayerStreamedIn(playerid, i)) {
+			continue;
+		}
+
+		range = GetPlayerDistanceFromPoint(i, pos_x, pos_y, pos_z);
+		if (range > max_range) {
+			continue;
+		}
+
+		range_ratio = (range_with_ratio - range) / range_with_ratio;
+		clr_r = floatround(range_ratio * color_r);
+		clr_g = floatround(range_ratio * color_g);
+		clr_b = floatround(range_ratio * color_b);
+
+		SendClientMessage(i, (clr_b << 8) | (clr_g << 16) | (clr_r << 24), string);
+	}
+
+	SendClientMessage(playerid, color, string);
+	return 1;
 }
 
 /*
@@ -468,37 +526,26 @@ stock GenerateRandomString(result_str[], length, size = sizeof(result_str), alph
 stock FormatPosition(position)
 {
 	static pos_string[] = {"st!", "nd!", "rd!", "th"};
-	new string[8];
 
-	valstr(string, position);
+	new
+		pos_index,
+		string[8];
 
-	if (IS_IN_RANGE(position, 1, 3)) {
-		strcat(string, pos_string[position - 1]);
-	} else if (position > 3) {
-		strcat(string, pos_string[3]);
+	if (position < 1) {
+		return string;
 	}
 
+	pos_index = position - 1;
+
+	if (position > 3) {
+		pos_index = sizeof(pos_string) - 1;
+	}
+
+	format(string, sizeof(string), "%d%s", position, pos_string[pos_index]);
 	return string;
 }
 
 // deprecated
-stock strcharsplit(const string[], &index, seperator=' ')
-{
-	new
-		result[20],
-		i = 0;
-
-	if (index != 0 && string[index] != '\0') {
-		index++;
-	}
-
-	while (string[index] && string[index] != seperator && string[index] != '\r' && string[index] != '\n') {
-		result[i++] = string[index++];
-	}
-
-	return result;
-}
-
 #if !defined ALLOWED_NICK_SYMBOLS
 	#define ALLOWED_NICK_SYMBOLS 'a'..'z','A'..'Z','0'..'9','_','[',']','.','=','(',')'
 #endif
@@ -546,7 +593,7 @@ stock IsValidChars(string[])
 	return 1;
 }
 
-stock IsNumeric(const string[])
+stock IsNumeric(string[])
 {
 	for (new i = 0; string[i] != '\0'; i++) {
 		if (!isdigit(string[i])) {
@@ -567,7 +614,7 @@ stock IsIpAddress(string[])
 			octet += (string[i] - '0') * j;
 			j /= 10;
 		} else if (string[i] == '.') {
-			if (IS_IN_RANGE(octet, 0, 255)) {
+			if (0 <= octet <= 255) {
 				j = 100;
 				octet = 0;
 			} else {
@@ -585,6 +632,16 @@ stock IsIpAddress(string[])
 	Math functions
 
 */
+
+stock Float:frandom(Float:max)
+{
+	return floatdiv(float(random(0)), floatdiv(float(cellmax), max));
+}
+
+stock Float:mathfrandom(Float:min, Float:max)
+{
+	return (frandom(max - min + 1.0) + min);
+}
 
 stock mathrandom(min, max)
 {
