@@ -378,7 +378,7 @@ stock ProxDetector(playerid, Float:max_range, color, string[], Float:max_ratio =
 		clr_g = floatround(range_ratio * color_g);
 		clr_b = floatround(range_ratio * color_b);
 
-		SendClientMessage(i, (clr_b << 8) | (clr_g << 16) | (clr_r << 24), string);
+		SendClientMessage(i, (color & 0xFF) | (clr_b << 8) | (clr_g << 16) | (clr_r << 24), string);
 	}
 
 	SendClientMessage(playerid, color, string);
