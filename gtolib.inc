@@ -504,7 +504,7 @@ stock GenerateRandomString(result_str[], length, size = sizeof(result_str), alph
 {
 	result_str[0] = '\0';
 
-	if (length > size) {
+	if (length >= size) {
 		length = size - 1;
 	}
 
