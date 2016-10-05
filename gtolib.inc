@@ -653,6 +653,24 @@ stock pow(value, degree)
 	return result;
 }
 
+stock getmax(...)
+{
+	new value = getarg(0);
+	for (new i = numargs() - 1; i != 0 ; i--) {
+		value = max(getarg(i), value);
+	}
+	return value;
+}
+
+stock getmin(...)
+{
+	new value = getarg(0);
+	for (new i = numargs() - 1; i != 0 ; i--) {
+		value = min(getarg(i), value);
+	}
+	return value;
+}
+
 stock Float:GetVehicleSpeed(vehicleid)
 {
 	new
@@ -738,19 +756,15 @@ SSCANF:ftime(string[])
 
 stock isdigit(symbol)
 {
-	if ('0' <= symbol <= '9') {
-		return 1;
-	}
-
-	return 0;
+	return '0' <= symbol <= '9';
 }
 
 
 /*
-	insertSort
+	insert_sort
 */
 
-stock insertSort(array[], const size = sizeof(array))
+stock insert_sort(array[], const size = sizeof(array))
 {
 	new
 		i,
