@@ -636,7 +636,7 @@ stock Float:frandom(Float:max)
 
 stock Float:mathfrandom(Float:min, Float:max)
 {
-	return (frandom(max - min + 1.0) + min);
+	return floatadd(frandom(floatadd(floatsub(max, min), 1.0)), min);
 }
 
 stock mathrandom(min, max)
@@ -670,6 +670,54 @@ stock getmin(...)
 	}
 	return value;
 }
+
+/*
+	Float mod operators
+*/
+
+stock Float:operator%(Float:oper1, Float:oper2)
+{
+	new Float:sum2 = oper2;
+	while (floatcmp(sum2, oper1) < 0) {
+		sum2 = floatadd(sum2, oper2);
+	}
+	if (_:sum2 == _:oper1) {
+		return 0.0;
+	}
+	return floatsub(oper1, floatsub(sum2, oper2));
+}
+
+stock Float:operator%(Float:oper1, oper2)
+{
+	new
+		Float:oper2f = float(oper2),
+		Float:sum2 = oper2f;
+	while (floatcmp(sum2, oper1) < 0) {
+		sum2 = floatadd(sum2, oper2f);
+	}
+	if (_:sum2 == _:oper1) {
+		return 0.0;
+	}
+	return floatsub(oper1, floatsub(sum2, oper2f));
+}
+
+stock Float:operator%(oper1, Float:oper2)
+{
+	new
+		Float:oper1f = float(oper1),
+		Float:sum2 = oper2;
+	while (floatcmp(sum2, oper1f) < 0) {
+		sum2 = floatadd(sum2, oper2);
+	}
+	if (_:sum2 == _:oper1f) {
+		return 0.0;
+	}
+	return floatsub(oper1f, floatsub(sum2, oper2));
+}
+
+/*
+	Vehicle speed
+*/
 
 stock Float:GetVehicleSpeed(vehicleid)
 {
