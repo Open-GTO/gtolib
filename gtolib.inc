@@ -467,22 +467,13 @@ stock FixAscii(text[])
 	}
 }
 
-stock InsertSpacesInString(string[], const size = sizeof(string), const between_pos = 3)
+#if defined FormatNumber
+stock FormatNumberToString(string[], const size, { _, Float, Text3D, Menu, Text, DB, DBResult, bool, File, hex, bit, bit_byte, Bit }:xVariable, iDecimals = -1, iThousandSeparator = DEFAULT_THOUSAND_SEP, iDecimalPoint = DEFAULT_DECIMAL_POINT, iTag = tagof( xVariable ) )
 {
-	for (new i = 1, length = strlen(string); i < length; i++) {
-		if ((length - i) % between_pos == 0) {
-			strins(string, " ", i, size);
-			i++;
-			length++;
-		}
-	}
+	string[0] = '\0';
+	return strcat(string, FormatNumber(xVariable, iDecimals, iThousandSeparator, iDecimalPoint, iTag), size);
 }
-
-stock InsertSpacesInInt(value, result[], const size = sizeof(result), const between_pos = 3)
-{
-	valstr(result, value);
-	InsertSpacesInString(result, size, between_pos);
-}
+#endif
 
 stock strcpy(result[], source[], const size = sizeof(result))
 {
