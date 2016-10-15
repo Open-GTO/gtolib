@@ -737,7 +737,7 @@ SSCANF:weather(string[])
 
 	weather = strval(string);
 
-	if (255 < weather < 0) {
+	if (!(0 < weather < 255)) {
 		return -1;
 	}
 
