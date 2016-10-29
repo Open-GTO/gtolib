@@ -344,6 +344,22 @@ stock GetPlayersInVehicle(vehicleid, players[], const size = sizeof(players))
 	return i;
 }
 
+stock PlayAudioStreamForPlayers(players[], url[], Float:posX = 0.0, Float:posY = 0.0, Float:posZ = 0.0, Float:distance = 50.0, usepos = 0)
+{
+	for (new idx = 0; players[idx] != INVALID_PLAYER_ID; idx++) {
+		PlayAudioStreamForPlayer(players[idx], url, posX, posY, posZ, distance, usepos);
+	}
+	return 1;
+}
+
+stock StopAudioStreamForPlayers(players[])
+{
+	for (new idx = 0; players[idx] != INVALID_PLAYER_ID; idx++) {
+		StopAudioStreamForPlayer(players[idx]);
+	}
+	return 1;
+}
+
 /*
 
 	Chat functions
