@@ -322,6 +322,28 @@ stock GetVehicleNearPlayers(vehicleid, Float:range, players[], const size = size
 	return 0;
 }
 
+stock GetPlayersInVehicle(vehicleid, players[], const size = sizeof(players))
+{
+	new
+		id,
+		i;
+
+	foreach (id : Player) {
+		if (vehicleid == GetPlayerVehicleID(id)) {
+			players[i] = id;
+
+			if (i >= size - 1) {
+				break;
+			} else {
+				i++;
+			}
+		}
+	}
+
+	players[i] = INVALID_PLAYER_ID;
+	return i;
+}
+
 /*
 
 	Chat functions
