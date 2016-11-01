@@ -803,6 +803,8 @@ SSCANF:ftime(string[])
 		time_type = string[length - 1];
 
 		strdel(string, length - 1, length);
+	} else {
+		return -1;
 	}
 
 	time_second = strval(string);
