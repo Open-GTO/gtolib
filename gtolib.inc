@@ -126,7 +126,7 @@ stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = s
 
 stock IsDateExpired(timestamp)
 {
-	if (getdate() > timestamp) {
+	if (gettime() > timestamp) {
 		return 1;
 	}
 
