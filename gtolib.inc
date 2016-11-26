@@ -276,14 +276,14 @@ stock SendMessageToNearPlayerPlayers(message[], Float:range, targetid)
 	}
 }
 
-stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const size = sizeof(players))
+stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const size = sizeof(players), exclude_playerid = INVALID_PLAYER_ID)
 {
 	new
 		id,
 		i;
 
 	foreach (id : Player) {
-		if (IsPlayerInRangeOfPoint(id, range, x, y, z)) {
+		if (id != exclude_playerid && IsPlayerInRangeOfPoint(id, range, x, y, z)) {
 			players[i] = id;
 
 			if (i >= size - 1) {
@@ -298,7 +298,7 @@ stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const si
 	return i;
 }
 
-stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof(players))
+stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof(players), exclude_playerid = INVALID_PLAYER_ID)
 {
 	new
 		Float:pos_x,
@@ -306,11 +306,11 @@ stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof
 		Float:pos_z;
 
 	GetPlayerPos(playerid, pos_x, pos_y, pos_z);
-	GetNearPlayers(pos_x, pos_y, pos_z, range, players, size);
+	GetNearPlayers(pos_x, pos_y, pos_z, range, players, size, exclude_playerid);
 	return 0;
 }
 
-stock GetVehicleNearPlayers(vehicleid, Float:range, players[], const size = sizeof(players))
+stock GetVehicleNearPlayers(vehicleid, Float:range, players[], const size = sizeof(players), exclude_playerid = INVALID_PLAYER_ID)
 {
 	new
 		Float:pos_x,
@@ -318,7 +318,7 @@ stock GetVehicleNearPlayers(vehicleid, Float:range, players[], const size = size
 		Float:pos_z;
 
 	GetVehiclePos(vehicleid, pos_x, pos_y, pos_z);
-	GetNearPlayers(pos_x, pos_y, pos_z, range, players, size);
+	GetNearPlayers(pos_x, pos_y, pos_z, range, players, size, exclude_playerid);
 	return 0;
 }
 
