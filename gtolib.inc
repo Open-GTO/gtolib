@@ -105,23 +105,25 @@ stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = s
 		minutes = (input_seconds / 60) % 60,
 		seconds = input_seconds % 60;
 
+	string[0] = '\0';
+
 	if (days != 0) {
 		Declension_GetDays(playerid, days, str_days);
-		Declension_GetHours(playerid, hours, str_hours);
-
-		format(string, size, "%d %s, %d %s, ", days, str_days, hours, str_hours);
-	} else if (hours != 0) {
-		Declension_GetHours(playerid, hours, str_hours);
-
-		format(string, size, "%d %s, ", hours, str_hours);
-	} else {
-		string[0] = '\0';
+		format(string, size, "%s%d %s, ", string, days, str_days);
 	}
 
-	Declension_GetMinutes(playerid, minutes, str_minutes);
-	Declension_GetSeconds(playerid, seconds, str_seconds);
+	if (hours != 0 || days != 0) {
+		Declension_GetHours(playerid, hours, str_hours);
+		format(string, size, "%s%d %s, ", string, hours, str_hours);
+	}
 
-	format(string, size, "%s%d %s, %d %s", string, minutes, str_minutes, seconds, str_seconds);
+	if (minutes != 0 || hours != 0 || days != 0) {
+		Declension_GetMinutes(playerid, minutes, str_minutes);
+		format(string, size, "%s%d %s, ", string, minutes, str_minutes);
+	}
+	
+	Declension_GetSeconds(playerid, seconds, str_seconds);
+	format(string, size, "%s%d %s", string, seconds, str_seconds);
 }
 
 stock IsDateExpired(timestamp)
