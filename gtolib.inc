@@ -436,13 +436,13 @@ stock Float:GetDistanceBetweenPoints(Float:x1, Float:y1, Float:z1, Float:x2, Flo
 	return VectorSize(x1 - x2, y1 - y2, z1 - z2);
 }
 
-stock GetCoordsBefore(Float:x, Float:y, Float:a, Float:distance, &Float:res_x, &Float:res_y)
+stock GetCoordsInFront(Float:x, Float:y, Float:a, Float:distance, &Float:res_x, &Float:res_y)
 {
 	res_x = x + (distance * floatsin(-a, degrees));
 	res_y = y + (distance * floatcos(-a, degrees));
 }
 
-stock GetCoordsBeforePlayer(playerid, Float:distance, &Float:x, &Float:y)
+stock GetCoordsInFrontOfPlayer(playerid, Float:distance, &Float:x, &Float:y)
 {
 	new
 		Float:x,
@@ -453,10 +453,10 @@ stock GetCoordsBeforePlayer(playerid, Float:distance, &Float:x, &Float:y)
 	GetPlayerPos(playerid, x, y, z);
 	GetPlayerFacingAngle(playerid, angle);
 
-	GetCoordsBefore(x, y, angle, distance, x, y);
+	GetCoordsInFront(x, y, angle, distance, x, y);
 }
 
-stock GetVehicleCoordsBeforePlayer(&Float:x, &Float:y, &Float:z, &Float:a, playerid, modelid = -1)
+stock GetVehicleCoordsInFrontOfPlayer(&Float:x, &Float:y, &Float:z, &Float:a, playerid, modelid = -1)
 {
 	new
 		Float:wide, Float:long, Float:high,
@@ -473,7 +473,7 @@ stock GetVehicleCoordsBeforePlayer(&Float:x, &Float:y, &Float:z, &Float:a, playe
 	GetPlayerPos(playerid, x, y, z);
 	GetPlayerFacingAngle(playerid, a);
 
-	GetCoordsBefore(x, y, a, wide + 0.5, x, y);
+	GetCoordsInFront(x, y, a, wide + 0.5, x, y);
 
 	z += 0.1;
 	if (wheel_z != 0.0) {
