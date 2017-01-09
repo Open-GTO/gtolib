@@ -121,7 +121,7 @@ stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = s
 		Declension_GetMinutes(playerid, minutes, str_minutes);
 		format(string, size, "%s%d %s, ", string, minutes, str_minutes);
 	}
-	
+
 	Declension_GetSeconds(playerid, seconds, str_seconds);
 	format(string, size, "%s%d %s", string, seconds, str_seconds);
 }
@@ -667,7 +667,7 @@ stock Float:frandom(Float:max)
 
 stock Float:mathfrandom(Float:min, Float:max)
 {
-	return floatadd(frandom(floatadd(floatsub(max, min), 1.0)), min);
+	return floatadd(frandom(floatsub(max, min)), min);
 }
 
 stock mathrandom(min, max)
