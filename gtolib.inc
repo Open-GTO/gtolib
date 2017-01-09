@@ -672,7 +672,7 @@ stock Float:mathfrandom(Float:min, Float:max)
 
 stock mathrandom(min, max)
 {
-	return (random(max - min + 1) + min);
+	return (random(max - min) + min);
 }
 
 stock pow(value, degree)
