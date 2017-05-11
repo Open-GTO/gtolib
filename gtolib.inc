@@ -53,11 +53,11 @@
 	#error You need to install foreach: https://github.com/Open-GTO/foreach
 #endif
 
-#if !defined FOREACH_I_PlayerPlayersStream
+#if !FOREACH_I_PlayerPlayersStream
 	#error You need to define FOREACH_I_PlayerPlayersStream before foreach
 #endif
 
-#if !defined FOREACH_I_VehiclePlayersStream
+#if !FOREACH_I_VehiclePlayersStream
 	#error You need to define FOREACH_I_VehiclePlayersStream before foreach
 #endif
 
