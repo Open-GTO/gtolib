@@ -53,8 +53,12 @@
 	#error You need to install foreach: https://github.com/Open-GTO/foreach
 #endif
 
-#if !defined FOREACH_PLAYERSSTREAM_ITERATOR
-	#error You need to define FOREACH_PLAYERSSTREAM_ITERATOR before foreach
+#if !defined FOREACH_I_PlayerPlayersStream
+	#error You need to define FOREACH_I_PlayerPlayersStream before foreach
+#endif
+
+#if !defined FOREACH_I_VehiclePlayersStream
+	#error You need to define FOREACH_I_VehiclePlayersStream before foreach
 #endif
 
 /*
@@ -74,11 +78,18 @@
 
 /*
 
-	Time functions
+	Forwards
 
 */
 
-#if defined _time_t_included
+forward Float:frandom(Float:max);
+forward Float:mathfrandom(Float:min, Float:max);
+
+/*
+
+	Time functions
+
+*/
 
 stock timestamp_to_format_date(unix_timestamp)
 {
@@ -89,8 +100,6 @@ stock timestamp_to_format_date(unix_timestamp)
 	format(string, sizeof(string), "%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
 	return string;
 }
-
-#endif
 
 stock GetTimeStringFromSeconds(playerid, input_seconds, string[], const size = sizeof(string))
 {
@@ -230,8 +239,8 @@ stock TeleportPlayerToPlayer(playerid, to_playerid, bool:with_vehicle = true)
 	// get info
 	GetPlayerPosEx(to_playerid, x, y, z, angle, interior, world);
 
-	x = x + random(2) - random(4);
-	y = y + random(2) - random(4);
+	x += mathfrandom(-2.0, 2.0);
+	y += mathfrandom(-2.0, 2.0);
 
 	// teleport
 	TeleportPlayerToPos(playerid, x, y, z, angle, interior, world, with_vehicle);
@@ -255,7 +264,7 @@ stock SendMessageToNearVehiclePlayers(message[], Float:range, vehicleid)
 
 	GetVehiclePos(vehicleid, x, y, z);
 
-	foreach (new playerid : Player) {
+	foreach (new playerid : VehiclePlayersStream[vehicleid]) {
 		if (IsPlayerInRangeOfPoint(playerid, range, x, y, z)) {
 			SendClientMessage(playerid, -1, message);
 		}
@@ -271,7 +280,7 @@ stock SendMessageToNearPlayerPlayers(message[], Float:range, targetid)
 
 	GetPlayerPos(targetid, x, y, z);
 
-	foreach (new playerid : PlayersStream[targetid]) {
+	foreach (new playerid : PlayerPlayersStream[targetid]) {
 		if (IsPlayerInRangeOfPoint(playerid, range, x, y, z)) {
 			SendClientMessage(playerid, -1, message);
 		}
@@ -330,7 +339,7 @@ stock GetPlayersInVehicle(vehicleid, players[], const size = sizeof(players))
 		id,
 		i;
 
-	foreach (id : Player) {
+	foreach (id : VehiclePlayersStream[vehicleid]) {
 		if (vehicleid == GetPlayerVehicleID(id)) {
 			players[i] = id;
 
@@ -403,7 +412,7 @@ stock ProxDetector(playerid, Float:max_range, color, string[], Float:max_ratio =
 	color_b = float(color >> 8 & 0xFF);
 	range_with_ratio = max_range * max_ratio;
 
-	foreach (new i : PlayersStream[playerid]) {
+	foreach (new i : PlayerPlayersStream[playerid]) {
 		range = GetPlayerDistanceFromPoint(i, pos_x, pos_y, pos_z);
 		if (range > max_range) {
 			continue;
@@ -473,7 +482,7 @@ stock GetVehicleCoordsInFrontOfPlayer(&Float:x, &Float:y, &Float:z, &Float:a, pl
 
 	z += 0.1;
 	if (wheel_z != 0.0) {
-		z -= high / 2 + wheel_z;
+		z -= high / 2.0 + wheel_z;
 	}
 
 	a += 90.0;
@@ -503,13 +512,11 @@ stock FixAscii(text[])
 	}
 }
 
-#if defined FormatNumber
 stock FormatNumberToString(string[], const size, { _, Float, Text3D, Menu, Text, DB, DBResult, bool, File, hex, bit, bit_byte, Bit }:xVariable, iDecimals = -1, iThousandSeparator = DEFAULT_THOUSAND_SEP, iDecimalPoint = DEFAULT_DECIMAL_POINT, iTag = tagof( xVariable ) )
 {
 	string[0] = '\0';
 	return strcat(string, FormatNumber(xVariable, iDecimals, iThousandSeparator, iDecimalPoint, iTag), size);
 }
-#endif
 
 stock strcpy(result[], source[], const size = sizeof(result))
 {
