@@ -50,11 +50,11 @@
 
 // foreach check
 #if !defined foreach
-	#define foreach%0(new%1:%2) \
-		for (new%1 = GetPlayerPoolSize(); %1 != -1; %1--) \
-			if (!IsPlayerConnected(%1) || IsPlayerNPC(%1)) { \
-				continue; \
-			}
+	#error You need to install foreach: https://github.com/Open-GTO/foreach
+#endif
+
+#if !defined FOREACH_PLAYERSSTREAM_ITERATOR
+	#error You need to define FOREACH_PLAYERSSTREAM_ITERATOR before foreach
 #endif
 
 /*
@@ -271,7 +271,7 @@ stock SendMessageToNearPlayerPlayers(message[], Float:range, targetid)
 
 	GetPlayerPos(targetid, x, y, z);
 
-	foreach (new playerid : Player) {
+	foreach (new playerid : PlayersStream[targetid]) {
 		if (IsPlayerInRangeOfPoint(playerid, range, x, y, z)) {
 			SendClientMessage(playerid, -1, message);
 		}
@@ -403,11 +403,7 @@ stock ProxDetector(playerid, Float:max_range, color, string[], Float:max_ratio =
 	color_b = float(color >> 8 & 0xFF);
 	range_with_ratio = max_range * max_ratio;
 
-	foreach (new i : Player) {
-		if (!IsPlayerStreamedIn(playerid, i)) {
-			continue;
-		}
-
+	foreach (new i : PlayersStream[playerid]) {
 		range = GetPlayerDistanceFromPoint(i, pos_x, pos_y, pos_z);
 		if (range > max_range) {
 			continue;
