@@ -355,6 +355,30 @@ stock GetPlayersInVehicle(vehicleid, players[], const size = sizeof(players))
 	return i;
 }
 
+stock GetPlayersAndSeatsInVehicle(vehicleid, player_ids[], player_seats[], const size = sizeof(player_ids))
+{
+	new
+		playerid,
+		i;
+
+	foreach (playerid : VehiclePlayersStream[vehicleid]) {
+		if (vehicleid == GetPlayerVehicleID(playerid)) {
+			player_ids[i] = playerid;
+			player_seats[i] = GetPlayerVehicleSeat(playerid);
+
+			if (i >= size - 1) {
+				break;
+			} else {
+				i++;
+			}
+		}
+	}
+
+	player_ids[i] = INVALID_PLAYER_ID;
+	player_seats[i] = -1;
+	return i;
+}
+
 stock PlayAudioStreamForPlayers(players[], url[], Float:posX = 0.0, Float:posY = 0.0, Float:posZ = 0.0, Float:distance = 50.0, usepos = 0)
 {
 	for (new idx = 0; players[idx] != INVALID_PLAYER_ID; idx++) {
@@ -368,6 +392,56 @@ stock StopAudioStreamForPlayers(players[])
 	for (new idx = 0; players[idx] != INVALID_PLAYER_ID; idx++) {
 		StopAudioStreamForPlayer(players[idx]);
 	}
+	return 1;
+}
+
+/*
+
+	Vehicle functions
+
+*/
+
+stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
+{
+	const MAX_VEHICLE_PASSENGERS = 9;
+
+	new
+		Float:pos_x, Float:pos_y, Float:pos_z,
+		Float:z_angle,
+		Float:health,
+		panels, doors, lights, tires,
+		player_ids[MAX_VEHICLE_PASSENGERS],
+		player_seats[MAX_VEHICLE_PASSENGERS];
+
+	// get data
+	if (!GetVehiclePos(vehicleid, pos_x, pos_y, pos_z)) {
+		return 0;
+	}
+
+	GetVehicleZAngle(vehicleid, z_angle);
+	GetVehicleHealth(vehicleid, health);
+	GetVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
+	GetPlayersAndSeatsInVehicle(vehicleid, player_ids, player_seats);
+
+	// update number
+	SetVehicleNumberPlate(vehicleid, numberplate);
+
+	SetVehicleToRespawn(vehicleid);
+
+	// set previous data
+	SetVehiclePos(vehicleid, pos_x, pos_y, pos_z);
+	SetVehicleZAngle(vehicleid, z_angle);
+	SetVehicleHealth(vehicleid, health);
+	UpdateVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
+
+	for (new i = 0; i < MAX_VEHICLE_PASSENGERS; i++) {
+		if (player_ids[i] == INVALID_PLAYER_ID) {
+			continue;
+		}
+
+		PutPlayerInVehicle(player_ids[i], vehicleid, player_seats[i]);
+	}
+
 	return 1;
 }
 
