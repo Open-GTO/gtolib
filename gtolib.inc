@@ -403,24 +403,26 @@ stock StopAudioStreamForPlayers(players[])
 
 stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
 {
-	const MAX_VEHICLE_PASSENGERS = 9;
+	const MAX_PLAYERS_IN_VEHICLE = 8;
 
 	new
 		Float:pos_x, Float:pos_y, Float:pos_z,
-		Float:z_angle,
+		Float:vel_x, Float:vel_y, Float:vel_z,
 		Float:health,
 		panels, doors, lights, tires,
-		player_ids[MAX_VEHICLE_PASSENGERS],
-		player_seats[MAX_VEHICLE_PASSENGERS];
+		world,
+		player_ids[MAX_PLAYERS_IN_VEHICLE],
+		player_seats[MAX_PLAYERS_IN_VEHICLE];
 
 	// get data
 	if (!GetVehiclePos(vehicleid, pos_x, pos_y, pos_z)) {
 		return 0;
 	}
 
-	GetVehicleZAngle(vehicleid, z_angle);
+	GetVehicleVelocity(vehicleid, vel_x, vel_y, vel_z);
 	GetVehicleHealth(vehicleid, health);
 	GetVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
+	world = GetVehicleVirtualWorld(vehicleid);
 	GetPlayersAndSeatsInVehicle(vehicleid, player_ids, player_seats);
 
 	// update number
@@ -430,11 +432,12 @@ stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
 
 	// set previous data
 	SetVehiclePos(vehicleid, pos_x, pos_y, pos_z);
-	SetVehicleZAngle(vehicleid, z_angle);
+	SetVehicleVelocity(vehicleid, vel_x, vel_y, vel_z);
 	SetVehicleHealth(vehicleid, health);
 	UpdateVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
+	SetVehicleVirtualWorld(vehicleid, world);
 
-	for (new i = 0; i < MAX_VEHICLE_PASSENGERS; i++) {
+	for (new i = 0; i < MAX_PLAYERS_IN_VEHICLE; i++) {
 		if (player_ids[i] == INVALID_PLAYER_ID) {
 			continue;
 		}
