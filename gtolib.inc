@@ -406,7 +406,7 @@ stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
 	const MAX_PLAYERS_IN_VEHICLE = 8;
 
 	new
-		Float:pos_x, Float:pos_y, Float:pos_z,
+		Float:pos_x, Float:pos_y, Float:pos_z, Float:z_angle,
 		Float:health,
 		panels, doors, lights, tires,
 		player_ids[MAX_PLAYERS_IN_VEHICLE],
@@ -417,9 +417,17 @@ stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
 		return 0;
 	}
 
+	GetVehicleZAngle(vehicleid, z_angle);
 	GetVehicleHealth(vehicleid, health);
 	GetVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
 	GetPlayersAndSeatsInVehicle(vehicleid, player_ids, player_seats);
+
+#if defined GetVehicleColor && defined GetVehiclePaintjob
+	new color1, color2;
+	GetVehicleColor(vehicleid, color1, color2);
+
+	new paintjob = GetVehiclePaintjob(vehicleid);
+#endif
 
 	// update number
 	SetVehicleNumberPlate(vehicleid, numberplate);
@@ -428,8 +436,17 @@ stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
 
 	// set previous data
 	SetVehiclePos(vehicleid, pos_x, pos_y, pos_z);
+	SetVehicleZAngle(vehicleid, z_angle);
 	SetVehicleHealth(vehicleid, health);
 	UpdateVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
+
+#if defined GetVehicleColor && defined GetVehiclePaintjob
+	ChangeVehicleColor(vehicleid, color1, color2);
+
+	if (paintjob != INVALID_VEHICLE_PAINTJOB_ID) {
+		ChangeVehiclePaintjob(vehicleid, paintjob);
+	}
+#endif
 
 	for (new i = 0; i < MAX_PLAYERS_IN_VEHICLE; i++) {
 		if (player_ids[i] == INVALID_PLAYER_ID) {
