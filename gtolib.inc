@@ -404,13 +404,15 @@ stock StopAudioStreamForPlayers(players[])
 stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
 {
 	const MAX_PLAYERS_IN_VEHICLE = 8;
+	const MAX_COMPONENTS_IN_VEHICLE = 13;
 
 	new
 		Float:pos_x, Float:pos_y, Float:pos_z, Float:z_angle,
 		Float:health,
 		panels, doors, lights, tires,
 		player_ids[MAX_PLAYERS_IN_VEHICLE],
-		player_seats[MAX_PLAYERS_IN_VEHICLE];
+		player_seats[MAX_PLAYERS_IN_VEHICLE],
+		components[MAX_COMPONENTS_IN_VEHICLE];
 
 	// get data
 	if (!GetVehiclePos(vehicleid, pos_x, pos_y, pos_z)) {
@@ -421,6 +423,10 @@ stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
 	GetVehicleHealth(vehicleid, health);
 	GetVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
 	GetPlayersAndSeatsInVehicle(vehicleid, player_ids, player_seats);
+
+	for (new i = 0; i < sizeof(components); i++) {
+		components[i] = GetVehicleComponentInSlot(vehicleid, i);
+	}
 
 #if defined GetVehicleColor && defined GetVehiclePaintjob
 	new color1, color2;
@@ -439,6 +445,12 @@ stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
 	SetVehicleZAngle(vehicleid, z_angle);
 	SetVehicleHealth(vehicleid, health);
 	UpdateVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
+
+	for (new i = 0; i < sizeof(components); i++) {
+		if (1000 <= components[i] <= 1193) {
+			AddVehicleComponent(vehicleid, components[i]);
+		}
+	}
 
 #if defined GetVehicleColor && defined GetVehiclePaintjob
 	ChangeVehicleColor(vehicleid, color1, color2);
