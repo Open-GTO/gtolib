@@ -680,7 +680,7 @@ stock FormatPosition(position)
 	#define ALLOWED_NICK_SYMBOLS 'a'..'z','A'..'Z','0'..'9','_','[',']','.','=','(',')'
 #endif
 
-stock NameCharCheck(playername[MAX_PLAYER_NAME + 1])
+stock NameCharCheck(const playername[MAX_PLAYER_NAME + 1])
 {
 	if (!strcmp(playername, "Unknown", true) || IsNumeric(playername)) {
 		return 0;
