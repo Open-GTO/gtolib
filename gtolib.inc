@@ -246,7 +246,7 @@ stock TeleportPlayerToPlayer(playerid, to_playerid, bool:with_vehicle = true)
 	TeleportPlayerToPos(playerid, x, y, z, angle, interior, world, with_vehicle);
 }
 
-stock SendMessageToNearPlayers(message[], Float:range, Float:x, Float:y, Float:z)
+stock SendMessageToNearPlayers(const message[], Float:range, Float:x, Float:y, Float:z)
 {
 	foreach (new playerid : Player) {
 		if (IsPlayerInRangeOfPoint(playerid, range, x, y, z)) {
@@ -255,7 +255,7 @@ stock SendMessageToNearPlayers(message[], Float:range, Float:x, Float:y, Float:z
 	}
 }
 
-stock SendMessageToNearVehiclePlayers(message[], Float:range, vehicleid)
+stock SendMessageToNearVehiclePlayers(const message[], Float:range, vehicleid)
 {
 	new
 		Float:x,
@@ -271,7 +271,7 @@ stock SendMessageToNearVehiclePlayers(message[], Float:range, vehicleid)
 	}
 }
 
-stock SendMessageToNearPlayerPlayers(message[], Float:range, targetid)
+stock SendMessageToNearPlayerPlayers(const message[], Float:range, targetid)
 {
 	new
 		Float:x,
@@ -287,7 +287,7 @@ stock SendMessageToNearPlayerPlayers(message[], Float:range, targetid)
 	}
 }
 
-stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const size = sizeof(players), exclude_playerid = INVALID_PLAYER_ID)
+stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const size = sizeof(players), const exclude_playerid = INVALID_PLAYER_ID)
 {
 	new
 		id,
@@ -309,7 +309,7 @@ stock GetNearPlayers(Float:x, Float:y, Float:z, Float:range, players[], const si
 	return i;
 }
 
-stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof(players), exclude_playerid = INVALID_PLAYER_ID)
+stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof(players), const exclude_playerid = INVALID_PLAYER_ID)
 {
 	new
 		Float:pos_x,
@@ -321,7 +321,7 @@ stock GetPlayerNearPlayers(playerid, Float:range, players[], const size = sizeof
 	return 0;
 }
 
-stock GetVehicleNearPlayers(vehicleid, Float:range, players[], const size = sizeof(players), exclude_playerid = INVALID_PLAYER_ID)
+stock GetVehicleNearPlayers(vehicleid, Float:range, players[], const size = sizeof(players), const exclude_playerid = INVALID_PLAYER_ID)
 {
 	new
 		Float:pos_x,
@@ -379,7 +379,7 @@ stock GetPlayersAndSeatsInVehicle(vehicleid, player_ids[], player_seats[], const
 	return i;
 }
 
-stock PlayAudioStreamForPlayers(players[], url[], Float:posX = 0.0, Float:posY = 0.0, Float:posZ = 0.0, Float:distance = 50.0, usepos = 0)
+stock PlayAudioStreamForPlayers(const players[], const url[], Float:posX = 0.0, Float:posY = 0.0, Float:posZ = 0.0, Float:distance = 50.0, usepos = 0)
 {
 	for (new idx = 0; players[idx] != INVALID_PLAYER_ID; idx++) {
 		PlayAudioStreamForPlayer(players[idx], url, posX, posY, posZ, distance, usepos);
@@ -387,7 +387,7 @@ stock PlayAudioStreamForPlayers(players[], url[], Float:posX = 0.0, Float:posY =
 	return 1;
 }
 
-stock StopAudioStreamForPlayers(players[])
+stock StopAudioStreamForPlayers(const players[])
 {
 	for (new idx = 0; players[idx] != INVALID_PLAYER_ID; idx++) {
 		StopAudioStreamForPlayer(players[idx]);
@@ -401,7 +401,7 @@ stock StopAudioStreamForPlayers(players[])
 
 */
 
-stock UpdateVehicleNumberPlate(vehicleid, numberplate[])
+stock UpdateVehicleNumberPlate(vehicleid, const numberplate[])
 {
 	const MAX_PLAYERS_IN_VEHICLE = 8;
 	const MAX_COMPONENTS_IN_VEHICLE = 13;
@@ -491,7 +491,7 @@ stock Chat_ClearAll()
 	}
 }
 
-stock ProxDetector(playerid, Float:max_range, color, string[], Float:max_ratio = 1.6)
+stock ProxDetector(playerid, Float:max_range, color, const string[], Float:max_ratio = 1.6)
 {
 	new
 		Float:pos_x,
@@ -618,7 +618,7 @@ stock FormatNumberToString(string[], const size, { _, Float, Text3D, Menu, Text,
 	return strcat(string, FormatNumber(xVariable, iDecimals, iThousandSeparator, iDecimalPoint, iTag), size);
 }
 
-stock strcpy(result[], source[], const size = sizeof(result))
+stock strcpy(result[], const source[], const size = sizeof(result))
 {
 	result[0] = 0;
 	return strcat(result, source, size);
@@ -634,7 +634,7 @@ stock strcpy(result[], source[], const size = sizeof(result))
 	#define DEFAULT_ALPHABET "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 #endif
 
-stock GenerateRandomString(result_str[], length, size = sizeof(result_str), alphabet[] = DEFAULT_ALPHABET, alphabet_size = sizeof(alphabet))
+stock GenerateRandomString(result_str[], length, const size = sizeof(result_str), const alphabet[] = DEFAULT_ALPHABET, const alphabet_size = sizeof(alphabet))
 {
 	result_str[0] = '\0';
 
@@ -708,7 +708,7 @@ stock NameCharCheck(playername[MAX_PLAYER_NAME + 1])
 	#define ALLOWED_STRING_SYMBOLS 'a'..'z','A'..'Z','0'..'9','_','[',']','=','(',')',' '
 #endif
 
-stock IsValidChars(string[])
+stock IsValidChars(const string[])
 {
 	for (new i = 0; string[i] != '\0'; i++) {
 		switch (string[i]) {
@@ -723,7 +723,7 @@ stock IsValidChars(string[])
 	return 1;
 }
 
-stock IsNumeric(string[])
+stock IsNumeric(const string[])
 {
 	for (new i = 0; string[i] != '\0'; i++) {
 		if (!isdigit(string[i])) {
@@ -733,7 +733,7 @@ stock IsNumeric(string[])
 	return 1;
 }
 
-stock IsIpAddress(string[])
+stock IsIpAddress(const string[])
 {
 	new
 		octet,

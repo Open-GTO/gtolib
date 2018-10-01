@@ -1,4 +1,6 @@
 {
+	"user": "Open-GTO",
+	"repo": "gtolib",
 	"entry": "test.pwn",
 	"output": "test.amx",
 	"dependencies": [
