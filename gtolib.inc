@@ -168,9 +168,9 @@ stock PlayerPlaySoundOnPlayer(playerid, soundid)
 stock PlaySoundForPlayersInRange(soundid, Float:range, Float:x, Float:y, Float:z)
 {
 	foreach (new i : Player) {
-	    if (IsPlayerInRangeOfPoint(i, range, x, y, z)) {
-		    PlayerPlaySound(i, soundid, x, y, z);
-	    }
+		if (IsPlayerInRangeOfPoint(i, range, x, y, z)) {
+			PlayerPlaySound(i, soundid, x, y, z);
+		}
 	}
 }
 
@@ -196,34 +196,57 @@ stock GetPlayerPosEx(playerid, &Float:x, &Float:y, &Float:z, &Float:angle, &inte
 	world = GetPlayerVirtualWorld(playerid);
 }
 
+stock TeleportVehicleToPos(vehicleid, Float:x, Float:y, Float:z, Float:angle, interior = 0, world = 0, bool:with_players = true)
+{
+	if (!IsValidVehicle(vehicleid)) {
+		return 0;
+	}
+
+	SetVehiclePos(vehicleid, x, y, z);
+	SetVehicleZAngle(vehicleid, angle);
+
+	LinkVehicleToInterior(vehicleid, interior);
+	SetVehicleVirtualWorld(vehicleid, world);
+
+	new trailerid = GetVehicleTrailer(vehicleid);
+	if (trailerid != 0) {
+		SetVehiclePos(trailerid, x, y, z);
+		SetVehicleZAngle(trailerid, angle);
+
+		LinkVehicleToInterior(trailerid, interior);
+		SetVehicleVirtualWorld(trailerid, world);
+
+		AttachTrailerToVehicle(trailerid, vehicleid);
+	}
+
+	if (with_players) {
+		foreach (new playerid : Player) {
+			if (!IsPlayerInVehicle(playerid, vehicleid)) {
+				continue;
+			}
+
+			SetPlayerVirtualWorld(playerid, world);
+			SetPlayerInterior(playerid, interior);
+		}
+	}
+
+	return 1;
+}
+
 stock TeleportPlayerToPos(playerid, Float:x, Float:y, Float:z, Float:angle, interior = 0, world = 0, bool:with_vehicle = true)
 {
 	new vehicleid = GetPlayerVehicleID(playerid);
-
 	if (vehicleid != 0 && with_vehicle) {
-		SetVehiclePos(vehicleid, x, y, z);
-		SetVehicleZAngle(vehicleid, angle);
-
-		LinkVehicleToInterior(vehicleid, interior);
-		SetVehicleVirtualWorld(vehicleid, world);
-
-		new trailerid = GetVehicleTrailer(vehicleid);
-		if (trailerid != 0) {
-			SetVehiclePos(trailerid, x, y, z);
-			SetVehicleZAngle(trailerid, angle);
-
-			LinkVehicleToInterior(trailerid, interior);
-			SetVehicleVirtualWorld(trailerid, world);
-
-			AttachTrailerToVehicle(trailerid, vehicleid);
-		}
-	} else {
-		SetPlayerPos(playerid, x, y, z);
-		SetPlayerFacingAngle(playerid, angle);
+		TeleportVehicleToPos(vehicleid, x, y, z, angle, interior, world, .with_players = true);
+		return 1;
 	}
+
+	SetPlayerPos(playerid, x, y, z);
+	SetPlayerFacingAngle(playerid, angle);
 
 	SetPlayerInterior(playerid, interior);
 	SetPlayerVirtualWorld(playerid, world);
+	return 1;
 }
 
 stock TeleportPlayerToPlayer(playerid, to_playerid, bool:with_vehicle = true)
