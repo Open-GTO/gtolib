@@ -758,17 +758,13 @@ stock IsNumeric(const string[])
 
 stock IsIpAddress(const string[])
 {
-	new
-		octet,
-		j = 100;
+	new octet = 0;
 
 	for (new i = 0; string[i] != '\0'; i++) {
-		if (j != 0 && isdigit(string[i])) {
-			octet += (string[i] - '0') * j;
-			j /= 10;
+		if (isdigit(string[i])) {
+			octet = octet * 10 + (string[i] - '0');
 		} else if (string[i] == '.') {
 			if (0 <= octet <= 255) {
-				j = 100;
 				octet = 0;
 			} else {
 				return 0;
@@ -777,6 +773,7 @@ stock IsIpAddress(const string[])
 			return 0;
 		}
 	}
+
 	return 1;
 }
 
