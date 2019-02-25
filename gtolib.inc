@@ -936,6 +936,9 @@ SSCANF:ftime(string[])
 	}
 
 	time_second = strval(string);
+	if (time_second < 0) {
+		return -1;
+	}
 
 	switch (time_type) {
 		case 's', 'ñ': {
